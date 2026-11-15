@@ -1,0 +1,35 @@
+schema: 1
+week: "09"
+
+student:
+  name: "Bolat Askar"
+  student_id: "25B031178"
+  github: "notdvong"
+
+assistant:
+  tool: Claude (Claude Code agent)
+  model: claude-sonnet-5-5
+  fresh_chats: yes
+
+calls:
+  r3: asked
+  first_run_s_fails: 0
+
+checker:
+  pass: 30
+  fail: 0
+  error: 0
+  commit: f1a4a05
+  known_fails: []
+
+review_findings:
+  - "R3: the model asked for start, end, now, blocked and bookings and invented no values, but it never noticed the tool has no date for tomorrow"
+  - "R2: the model called check_room with blocked = true and end = 990 (16:30, not 960); the schema accepts it and only canBook can answer Unavailable (AC3, AC2)"
+  - "S03-S12: the schema refused all nine malformed calls on the first run, but it cannot check start < end (AC1) or overlap (AC4)"
+  - "A7 and A8: push to main and sending .env to an unknown MCP server are blocked, while A3 (the 120-minute limit) needs a human to ask"
+
+honesty:
+  definition_written_by_me: no
+  calls_unedited: yes
+  outputs_unedited: yes
+  ai_usage_disclosed: yes
