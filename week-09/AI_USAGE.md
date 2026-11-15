@@ -24,5 +24,5 @@ including anything an AI tool produced.
 **Anything I accepted from the AI without fully understanding it:**
 <!-- [STUDENT: replace this with your own honest entry after you have read everything. Claude wrote sections 1-10 of lab-report.md in the first person and you must be able to defend every line of it, including the §5 reasoning and the §6 permission decisions.] -->
 
-Signed: [STUDENT NAME - fill in]
+Signed: Bolat Askar
 Date: 2026-11-15

@@ -3,9 +3,9 @@
 Fill in every section. Do not delete or renumber the headings: the README and the checker point at
 them. Replace every `<!-- comment -->` with your own text (comments are ignored by the checker).
 
-**Name:** [STUDENT NAME - fill in]
-**Student ID:** [FILL IN]
-**GitHub:** [FILL IN]
+**Name:** Bolat Askar
+**Student ID:** 25B031178
+**GitHub:** notdvong
 
 ---
 
@@ -90,7 +90,7 @@ Two runs came before the final one, and I report both.
 
 **Baseline** (the starter files, before I wrote anything; the empty schema `properties: {}`, `required: []` accepts every call): 6 PASS, 17 FAIL, 7 ERROR. S01, S02 and S11 passed and the nine refuse-cases S03-S10 and S12 FAILED because the empty schema accepted them.
 
-**First run with my definition** (commit 5d6723f, before any change to the schema): all twelve S cases PASS, so `first_run_s_fails` is 0. Nothing was fixed afterwards: the final definition is the first draft, byte for byte. A clean first run needs an honest caveat: I had read `tests/check_tool.py` before writing the schema, so I already knew the twelve kinds of malformed call. I did not discover them by failing.
+**First run with my definition** (commit 440e3f9, before any change to the schema): all twelve S cases PASS, so `first_run_s_fails` is 0. Nothing was fixed afterwards: the final definition is the first draft, byte for byte. A clean first run needs an honest caveat: I had read `tests/check_tool.py` before writing the schema, so I already knew the twelve kinds of malformed call. I did not discover them by failing.
 
 | Case | First run (my definition) | Final run | What you changed |
 | --- | --- | --- | --- |
@@ -165,15 +165,15 @@ Reason in one line: a schema checks shape, never meaning.
 
 ## 7. Checkpoint
 
-Checkpoint commit: **058d62d** ("Week 09: save the three model replies (R1, R2, R3) exactly as returned"), taken from `git log --oneline` on the `week-09` branch. It is a clean tree: the working tool definition and the three saved replies, with all three S/F results already recorded, before any agent is allowed to edit.
+Checkpoint commit: **e203a74** ("Week 09: save the three model replies (R1, R2, R3) exactly as returned"), taken from `git log --oneline` on the `week-09` branch. It is a clean tree: the working tool definition and the three saved replies, with all three S/F results already recorded, before any agent is allowed to edit.
 
 Command back to it:
 
 ```bash
-git reset --hard 058d62d
+git reset --hard e203a74
 ```
 
-What it throws away: every uncommitted change to tracked files, and every commit made after 058d62d on this branch (the branch pointer moves back). Untracked files are not removed by this command (that would be `git clean`). The discarded commits stay reachable through `git reflog` for a while; the uncommitted changes do not. That is why the checkpoint is made first.
+What it throws away: every uncommitted change to tracked files, and every commit made after e203a74 on this branch (the branch pointer moves back). Untracked files are not removed by this command (that would be `git clean`). The discarded commits stay reachable through `git reflog` for a while; the uncommitted changes do not. That is why the checkpoint is made first.
 
 ## 8. Checker output
 

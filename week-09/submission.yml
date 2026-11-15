@@ -2,9 +2,9 @@ schema: 1
 week: "09"
 
 student:
-  name: "[STUDENT NAME - fill in]"
-  student_id: "[FILL IN]"
-  github: "[FILL IN]"
+  name: "Bolat Askar"
+  student_id: "25B031178"
+  github: "notdvong"
 
 assistant:
   tool: Claude (Claude Code agent)
