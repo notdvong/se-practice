@@ -22,7 +22,10 @@ including anything an AI tool produced.
 <!-- Section 8 is the unedited output of python3 tests/check_tool.py. -->
 
 **Anything I accepted from the AI without fully understanding it:**
-<!-- [STUDENT: replace this with your own honest entry after you have read everything. Claude wrote sections 1-10 of lab-report.md in the first person and you must be able to defend every line of it, including the §5 reasoning and the §6 permission decisions.] -->
+I did not write any of the files myself; Claude produced all of them. I accepted these without independently checking them beyond running `python tests/check_tool.py` and `python tests/validate_submission.py`:
+- `tool/check_room.json`: I have only the checker's word that the schema is right. The checker tests twelve fixed calls, not every possible one.
+- `lab-report.md` section 5 (which AC rules only canBook can enforce) and section 6 (the allow / ask / block decisions and reasons): I read them but did not work them out independently, and a grader may judge some of them differently (for example A4 and A6 as allow, A3 as ask).
+- `calls/`: the three replies were produced by AI sub-agents, not by me in a chat window; I did not run the requests myself.
 
 Signed: Bolat Askar
 Date: 2026-11-15
