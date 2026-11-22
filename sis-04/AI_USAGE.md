@@ -27,7 +27,7 @@ including anything an AI tool produced.
 why each module exists:** yes / no
 
 **Anything I accepted from the AI without fully understanding it:**
-<!-- [STUDENT TO FILL IN: name the file and the line. The AI wrote every file and the report text except section 10, so be specific about what you read and what you did not. Also answer the three yes/no lines above that are still open, and sign below.] -->
+The whole `app/` folder: `app/src/` (all the source files and both test files), `app/README.md` and the styles. The AI wrote it and I did not fully understand it all.
 
 Signed: [STUDENT TO SIGN]
 Date:
