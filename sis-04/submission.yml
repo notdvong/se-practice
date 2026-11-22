@@ -1,0 +1,58 @@
+# SIS #04 — the declaration. FACTS ONLY: every explanation stays in report.md.
+#
+# Fill this in LAST, after your final run of the checker, then validate it:
+#     python tests/check_sis.py
+#     python tests/validate_submission.py
+#
+# Your checker numbers are re-run by the instructor at the head of your pull request.
+# Numbers that do not match what that commit produces cost the whole workflow criterion.
+# A FAIL you report honestly — here and under known_fails — costs nothing extra.
+#
+# Format rules: two spaces for indentation, never tabs. Leave the keys exactly as they are.
+
+schema: 1
+assignment: "sis-04"            # do not edit
+
+student:
+  name: "Bolat Askar"   # as in the university register
+  student_id: "25B031178"   # e.g. 00X000000
+  group:                        # your group code, as in the timetable
+  github: notdvong   # username only, not a URL
+
+assistant:
+  tool: "Claude (Claude Code agent)"   # the assistant you worked with, e.g. ChatGPT (web), Claude.ai, Claude Code
+  model: claude-sonnet-5-5   # exactly as in report.md section 1, or: not displayed
+
+project:                        # exactly as in report.md section 1
+  start_from: starter   # week-08 | week-07 | sis-03 | starter
+  baseline_commit: 1d36742   # the commit that brought the starting point in unchanged
+  language: ts   # ts | js
+  vitest: 3.2.7   # the version from the "RUN  v..." line, e.g. 3.2.4
+
+counts:                         # the checker prints most of these under --json "measured"
+  rooms: 5   # rooms in ROOMS (src/rooms)
+  tests_original: 0   # tests in the baseline run, report.md 1.1 (0 if there were none)
+  tests_final: 27   # tests in your final test files
+  risks: 6   # rows in report.md 3.1
+  exchanges: 3   # complete exchanges in report.md section 8
+
+checker:                        # from your LAST run of python tests/check_sis.py
+  pass: 32
+  fail: 1
+  error: 0
+  commit: 3a4f4e6   # the commit you ran it at: git rev-parse --short HEAD
+                                # (normally the commit just before you commit this file — that is fine)
+  known_fails: [L10]               # every check still FAIL or ERROR, as in report.md section 9, e.g. [E3]
+
+review_findings:
+  - "F3: the starter never read room.blocked (grep count 0), only a page-level checkbox; checkRoom now uses each room's own blocked flag and the F3 test checks it"
+  - "F5: the starter kept an old result when the room changed (A-101 Unavailable stayed on screen for B-204); the answer is now tied to its room and re-run, see switch-a.png, switch-b.png and the F5 test"
+  - "AC1: start-before-end was written twice in check() and start >= end showed an error and Unavailable together; it is now one rule in canBook, covered by the AC1 tests"
+  - "F2: the filter must use every(), not some(); the F2 tests fail when it is changed to some() (checked on a copy)"
+  - "Exchange 2: the assistant suggested blocked = room.blocked || checkbox and a canBook that returns a reason code; both were rejected, see report 3.3"
+
+honesty:
+  baseline_unchanged: yes   # yes | no   app/ at the baseline commit is the starting point as it was
+  runs_unedited: yes   # yes | no   every run in report.md is pasted from a real terminal
+  no_invented_metrics: yes   # yes | no   every number in section 7 was measured as the row says
+  ai_usage_disclosed: yes   # yes | no   AI_USAGE.md and section 8 are complete
