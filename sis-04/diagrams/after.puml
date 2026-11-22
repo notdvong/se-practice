@@ -1,5 +1,47 @@
-' diagrams/after.puml — the same view of your FINAL code. It must show rooms, booking, filter
-' and the UI (App and any components), with an arrow for each import. Replace this stub.
-'
 @startuml
+' The FINAL code: rooms (data), filter, booking (rules), time (helpers) and the UI, one box per module.
+title After: modules and their imports
+
+package "UI (presentation)" {
+  component "main.tsx" as Main
+  component "App.tsx\n(state and wiring)" as App
+  component "FilterPanel.tsx" as FilterPanel
+  component "RoomList.tsx" as RoomList
+  component "CheckPanel.tsx" as CheckPanel
+  component "BookingList.tsx" as BookingList
+  component "time.ts\n(HH:MM <-> minutes)" as Time
+}
+
+package "Rules and data (no UI)" {
+  component "rooms.ts\n(Room type, ROOMS, EQUIPMENT)" as Rooms
+  component "filter.ts\n(filterRooms: F1, F2, F4)" as Filter
+  component "booking.ts\n(canBook AC1-AC5, checkRoom F3, F5)" as Booking
+}
+
+package "Tests (Vitest)" {
+  component "filter.test.ts" as FilterTest
+  component "booking.test.ts" as BookingTest
+}
+
+Main --> App
+App --> Rooms : ROOMS, EQUIPMENT
+App --> Filter : filterRooms()
+App --> Booking : checkRoom(), MINUTES_PER_DAY
+App --> Time : toMinutes()
+App --> FilterPanel
+App --> RoomList
+App --> CheckPanel
+App --> BookingList
+RoomList --> Rooms : type Room
+BookingList --> Rooms : type Interval
+BookingList --> Time : formatMinutes()
+CheckPanel --> Booking : MAX_MINUTES
+Filter --> Rooms : type Room
+Booking --> Rooms : type Room, Interval
+
+FilterTest --> Filter
+FilterTest --> Rooms : type Room
+BookingTest --> Booking
+BookingTest --> Filter
+BookingTest --> Rooms : type Room
 @enduml
