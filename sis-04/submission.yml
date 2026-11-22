@@ -32,7 +32,7 @@ project:                        # exactly as in report.md section 1
 counts:                         # the checker prints most of these under --json "measured"
   rooms: 5   # rooms in ROOMS (src/rooms)
   tests_original: 0   # tests in the baseline run, report.md 1.1 (0 if there were none)
-  tests_final:                  # tests in your final test files
+  tests_final: 27   # tests in your final test files
   risks: 6   # rows in report.md 3.1
   exchanges: 3   # complete exchanges in report.md section 8
 

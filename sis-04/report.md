@@ -281,7 +281,25 @@ npx vitest run
      tests equals what your test files hold (R2). -->
 
 ```text
-(paste here)
+@notdvong ➜ /workspaces/se-practice/sis-04/app (1d36742) $ cd ../..
+@notdvong ➜ /workspaces/se-practice (1d36742) $ git checkout sis-04
+Previous HEAD position was 1d36742 sis-04: baseline from starter
+Switched to branch 'sis-04'
+Your branch is up to date with 'origin/sis-04'.
+@notdvong ➜ /workspaces/se-practice (sis-04) $ cd sis-04/app
+@notdvong ➜ /workspaces/se-practice/sis-04/app (sis-04) $ npx vitest run
+
+ RUN  v3.2.7 /workspaces/se-practice/sis-04/app
+
+ ✓ src/booking.test.ts (18 tests) 7ms
+ ✓ src/filter.test.ts (9 tests) 9ms
+
+ Test Files  2 passed (2)
+      Tests  27 passed (27)
+   Start at  21:41:41
+   Duration  822ms (transform 130ms, setup 0ms, collect 156ms, tests 15ms, environment 1ms, prepare 254ms)
+
+@notdvong ➜ /workspaces/se-practice/sis-04/app (sis-04) $
 ```
 
 ## 7. Quality evaluation (Task 5)
@@ -292,7 +310,7 @@ npx vitest run
 
 | Measure | Original | Final | How I obtained it |
 | --- | --- | --- | --- |
-| Automated tests passed / total | (write here) | (write here) | (write here) |
+| Automated tests passed / total | 0/0 | 27/27 | the run in 1.1 ("No test files found") and the run in 6.3 ("27 passed (27)") |
 | Duplicated logic locations removed | 1 duplicated location: the start-before-end condition written twice in `check()` (lines 43 and 50) | 0 left; the condition is written once, in `canBook` | counted in 5.3; `git show 1d36742:sis-04/app/src/App.tsx \| grep -n "s < e"` for the original and `grep -rn "start < end\|s < e"` over the final non-test source |
 | Code structure: modules and their responsibilities | 3 source files; `App.tsx` held the data, the rules and the page | 13 source files: `rooms.ts` (data), `filter.ts`, `booking.ts` (rules), `time.ts`, `App.tsx` and four components (presentation), 2 test files | `git ls-tree -r --name-only 1d36742 sis-04/app` and `git ls-files sis-04/app/src`; responsibilities in 5.1 |
 | Remaining limitation | no tests at all, so nothing was checked automatically | no automated test renders the page: the F4 empty state, the F5 refresh on room change and the narrow layout are checked only by a manual browser run and the screenshots, because jsdom and Testing Library are not in `package.json`; Vitest covers `filterRooms`, `canBook` and `checkRoom` | I looked for rendering tests in the two test files and `package.json`; the browser run is in 4.2 |
