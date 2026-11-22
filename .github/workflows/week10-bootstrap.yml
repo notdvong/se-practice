@@ -1,0 +1,32 @@
+name: Week 10 bootstrap and verification
+on:
+  push:
+    branches:
+      - week-10
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Week 10 branch
+        uses: actions/checkout@v4
+        with:
+          ref: week-10
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Restore assignment and run real verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat Week10-payload-*.part > /tmp/week10-payload.b64
+          base64 --decode /tmp/week10-payload.b64 > Week10-payload.tar.xz
+          rm /tmp/week10-payload.b64
+          tar -xJf Week10-payload.tar.xz
+          python payload/bootstrap.py
+      - name: Push checkpoint, regression and final submission commits
+        shell: bash
+        run: git push origin HEAD:week-10
