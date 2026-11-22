@@ -403,9 +403,9 @@ Not run. The required six rules are written directly in §9.1; no additional ass
 
 | Check | Why it stays |
 | --- | --- |
-| none | All 31 week-10 checker checks passed after the real baseline, regression and final Vitest outputs were inserted. The submission validator still asks the student to fill the private KBTU student ID (D3). |
+| none | All 31 week-10 checker checks passed. The submission validator also passed all 15 checks, including D3 for student ID 25B031178. |
 
-The student identifier in `submission.yml` is left for the student to enter privately; it is not copied into this generated artifact. That will leave validator check D3 until the student fills it.
+The student ID was supplied for this submission and is included in `submission.yml`. The validator confirms that the value is present and has the expected shape.
 
 ## 10. Release decision and conclusion
 
