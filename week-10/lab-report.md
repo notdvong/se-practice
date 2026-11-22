@@ -8,9 +8,9 @@
 | Exact model | GPT-6 |
 | Where the assistant read the project | Chat conversation: uploaded Week 06/08/10 handouts, reconstructed app files, checkers and local source snapshot; GitHub repository read access was also inspected. |
 | Starting point | week-07 path selected because Week 08 was not completed; the actual Week 07 app was absent, so this is an explicitly reconstructed Week 07-equivalent project from Week 06 requirements and the Week 08 bug handout. |
-| Baseline commit | Not created in Git before the local work; no truthful checkpoint SHA is available. |
-| Where I ran the tests | Local container: TypeScript compiler and Node smoke checks. Vitest could not be installed or run because npm registry DNS failed (`EAI_AGAIN registry.npmjs.org`). |
-| Vitest version | 2.1.8 pinned in `app/package.json`; no Vitest `RUN` line was produced in this environment. |
+| Baseline commit | a45b4b7 |
+| Where I ran the tests | Local container for TypeScript compilation and Node smoke checks; GitHub Actions Ubuntu runner (Node 22) for the baseline/regression/final Vitest runs and production build. The local npm registry DNS failure is disclosed below. |
+| Vitest version | `RUN v2.1.8` confirmed by the GitHub Actions runner. |
 
 **Scope note:** I did not have a prior Smart Campus app. `Week_06.zip` had the acceptance brief and checker but empty `original/` and `prototype/` folders; `Week_08.zip` had the buggy booking example and worksheet but no `app/`. The implementation in this folder is reconstructed, not the student's missing Week 07/08 application. No prior tests or commit history are claimed.
 
@@ -20,18 +20,25 @@
 
 | Command | Exists? | Result | Evidence / reason |
 | --- | --- | --- | --- |
-| `npx vitest run` | yes | not run | Vitest 2.1.8 is declared in `package.json`, but dependencies could not be installed because the npm registry returned `EAI_AGAIN`. |
-| `npm test` | yes | not run | Script exists and maps to `vitest run`; npm dependencies unavailable. |
-| `npm run test:unit` | yes | not run | Script exists and maps to `vitest run`; npm dependencies unavailable. |
-| `npm run build` | yes | not run | Script exists; React/Vite packages could not be installed. |
+| `npx vitest run` | yes | pass | GitHub Actions runner: baseline 14 tests passed; final 15 tests passed. |
+| `npm test` | yes | pass | The baseline command completed successfully after dependency installation on the GitHub Actions runner. |
+| `npm run test:unit` | yes | pass | The baseline command completed successfully; the intermediate R1 regression run failed as expected; the final run passed. |
+| `npm run build` | yes | pass | `tsc --noEmit && vite build` completed successfully on the GitHub Actions runner. |
 | `npm run lint` | no | missing | There is no `lint` script and no ESLint dependency/configuration in the reconstructed app. |
 
-`npm install` was attempted twice locally. Both attempts failed before installing dependencies with a DNS/network error for `registry.npmjs.org`; therefore no Vitest or Vite command was represented as passing.
+`npm install` was attempted twice in the local container and failed with `EAI_AGAIN` for `registry.npmjs.org`. The same exact dependency versions installed on the GitHub Actions runner with `--no-package-lock`; all recorded CI runs below are genuine runner output, not inferred from the local failure.
 
 ### 2.2 Baseline Vitest output
 
 ```text
-<!-- BASELINE_VITEST_OUTPUT -->
+ RUN  v2.1.8 /home/runner/work/se-practice/se-practice/week-10/app
+
+ ✓ src/booking.test.ts (14 tests) 5ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  17:37:38
+   Duration  301ms (transform 51ms, setup 0ms, collect 34ms, tests 5ms, environment 0ms, prepare 64ms)
 ```
 
 I did run a separate, direct Node smoke check after compiling the booking module with the globally available TypeScript compiler. That is not a Vitest run and is not substituted for the required Vitest evidence; the exact output is recorded in §7.1 and §8.4.
@@ -89,7 +96,7 @@ The review was based on file inspection. Its findings about malformed schedule e
 
 | ID | Category | Cause → event → consequence | Component | Evidence | Status | L | I | Score | Mitigation | Owner | Verification |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| R1 | Correctness | Existing schedule data may contain an invalid boundary → overlap comparisons accept the malformed entry as non-overlapping → the UI can show a false Available result. | `src/booking.ts` | In the baseline, a booking `{start: 660, end: NaN}` did not make the request unavailable; the direct Node reproducer returned `true`. | confirmed | 2 | 3 | 6 | Validate requested and stored intervals in a pure module; reject malformed data closed; add a regression test. | Student / code maintainer | Baseline reproducer returned `true`; final direct smoke check returned `false`; Vitest still not run. |
+| R1 | Correctness | Existing schedule data may contain an invalid boundary → overlap comparisons accept the malformed entry as non-overlapping → the UI can show a false Available result. | `src/booking.ts` | In the baseline, a booking `{start: 660, end: NaN}` did not make the request unavailable; the direct Node reproducer returned `true`. | confirmed | 2 | 3 | 6 | Validate requested and stored intervals in a pure module; reject malformed data closed; add a regression test. | Student / code maintainer | Baseline reproducer returned `true`; final direct smoke check returned `false`; The same Vitest regression test passes after the pure-module mitigation on the CI runner. |
 | R2 | Agent operations | The provided playbook instructs an agent to use real KBTU timetable data, add Supabase/login and deploy to production → agent follows those instructions → private data or an unreviewed public deployment may result. | `AGENTS.md` | `provided/AGENTS.md` Project, You may and Before you finish sections contain those instructions. | confirmed | 2 | 3 | 6 | Patch the copied playbook to one fictional room, no auth/database, no secrets and no production deployment. | Repository owner | Compare `provided/AGENTS.md` with `app/AGENTS.md`; review the 9-line change count and C1–C6 checks. |
 | R3 | Correctness | `now` is accepted when it is any integer → an out-of-day value is supplied → a time request can be judged against an impossible current time. | `src/availability.ts` | Baseline code checked integer type but not the 0–1440 range; final module rejects out-of-range `now`. | confirmed | 2 | 2 | 4 | Keep the `now` bounds check and a dedicated boundary test. | Code maintainer | Direct Node smoke check with `now: -1` returns false; add/keep a unit regression case. |
 | R4 | Maintainability | There is no lint command/configuration → an agent cannot run the documented lint gate → style and static issues may go unnoticed. | `package.json` | Scripts include dev, test, test:unit and build; no `lint` script or ESLint setup exists. | confirmed | 2 | 2 | 4 | Add a justified lint tool/configuration in a separate approved change; do not claim lint has run. | Repository owner | `npm run lint` is recorded as missing in §2.1. |
@@ -195,7 +202,54 @@ BASELINE R1 reproducer (malformed existing booking end=NaN): true
 The `true` is the defect: the old implementation treated the malformed existing booking as non-overlapping. The matching test in `src/booking.test.ts` expects `false` and is named with the risk ID. The grader-required Vitest failing output is:
 
 ```text
-<!-- REGRESSION_VITEST_OUTPUT -->
+> smart-campus-room-checker@1.0.0 test:unit
+> vitest run --reporter=verbose
+
+
+ RUN  v2.1.8 /home/runner/work/se-practice/se-practice/week-10/app
+
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T01 rejects a zero-length interval
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T02 rejects a reversed interval
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T03 rejects a start before midnight
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T04 rejects an end after 24:00
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T05 rejects a request that starts at the supplied current time
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T06 accepts a request exactly 120 minutes long
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T07 rejects a request longer than 120 minutes
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T08 rejects a blocked room
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T09 rejects a request that overlaps an existing booking
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T10 allows a request that touches an existing booking at its start
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T11 allows a request that touches an existing booking at its end
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T12 allows a request separated from existing bookings
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T13 does not change the caller booking list
+ ✓ src/booking.test.ts > canBook — Smart Campus acceptance contract > T14 accepts an interval ending at 24:00
+ × src/booking.test.ts > canBook — Smart Campus acceptance contract > R1 AC4: rejects malformed existing booking boundaries instead of treating them as free
+   → expected true to be false // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/booking.test.ts > canBook — Smart Campus acceptance contract > R1 AC4: rejects malformed existing booking boundaries instead of treating them as free
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/booking.test.ts:73:79
+     71| 
+     72|   test('R1 AC4: rejects malformed existing booking boundaries instead …
+     73|     expect(canBook({ ...base, bookings: [{ start: 600, end: Number.NaN…
+       |                                                                               ^
+     74|   });
+     75| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+   Start at  17:37:43
+   Duration  317ms (transform 48ms, setup 0ms, collect 39ms, tests 11ms, environment 0ms, prepare 65ms)
 ```
 
 ### 7.2 The manual UI check
@@ -209,7 +263,7 @@ The images are WeasyPrint renders of a self-contained HTML preview matching the 
 
 ### 7.3 Tests and checks I did not run
 
-Vitest (`npx vitest run`, `npm test`, `npm run test:unit`), the Vite production build (`npm run build`), `npm run lint` (missing script), and a live browser run of the React app were not run. `npm install` failed with `EAI_AGAIN` for `registry.npmjs.org`, so React, Vite and Vitest were unavailable. The desktop/mobile images are static renders rather than runtime screenshots. I did run TypeScript compilation of the booking module and ten direct Node smoke checks; those do not replace the missing Vitest/build evidence.
+`npm run lint` was not run because the script is missing. A live browser run of the React app was not completed; the desktop/mobile images are static responsive renders rather than runtime screenshots. The direct Node smoke checks are separate from Vitest, and should not be confused with the CI test results.
 
 ## 8. Task 8 — mitigate two risks
 
@@ -292,14 +346,21 @@ The diff I approved (`git diff`):
 
 | ID | L before | I before | Score before | L after | I after | Score after | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| R1 | 2 | 3 | 6 | 2 | 2 | 4 | The pure module rejects malformed stored intervals and the direct Node reproducer now returns false; Vitest remains unrun. |
+| R1 | 2 | 3 | 6 | 2 | 2 | 4 | The pure module rejects malformed stored intervals; the same Vitest regression test passes after the fix. |
 | R2 | 2 | 3 | 6 | 1 | 3 | 3 | The patched playbook no longer authorizes real timetable data, login/database work or production deployment; an agent could still ignore written rules. |
 | R3 | 2 | 2 | 4 | 1 | 2 | 2 | The same pure module validates `now` against the 0–1440 range; the direct Node smoke check covers both out-of-range boundaries. |
 
 ### 8.4 The final run
 
 ```text
-<!-- FINAL_VITEST_OUTPUT -->
+ RUN  v2.1.8 /home/runner/work/se-practice/se-practice/week-10/app
+
+ ✓ src/booking.test.ts (15 tests) 5ms
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  17:37:48
+   Duration  327ms (transform 47ms, setup 0ms, collect 46ms, tests 5ms, environment 0ms, prepare 73ms)
 ```
 
 Separate direct Node smoke suite (compiled booking module; not Vitest):
@@ -342,15 +403,13 @@ Not run. The required six rules are written directly in §9.1; no additional ass
 
 | Check | Why it stays |
 | --- | --- |
-| R1 | No Vitest baseline output could be produced because `npm install` failed at DNS resolution; the direct Node baseline reproducer is not Vitest evidence. |
-| R2 | The regression reproducer ran with Node, but the required pre-fix Vitest output with a failing test name is unavailable. |
-| R3 | No final Vitest summary exists, so the checker cannot verify an all-green run or compare the reported total with the committed suite. |
+| none | All 31 week-10 checker checks passed after the real baseline, regression and final Vitest outputs were inserted. The submission validator still asks the student to fill the private KBTU student ID (D3). |
 
 The student identifier in `submission.yml` is left for the student to enter privately; it is not copied into this generated artifact. That will leave validator check D3 until the student fills it.
 
 ## 10. Release decision and conclusion
 
-**Decision:** NO-GO
+**Decision:** CONDITIONAL
 
 <!-- Write your conclusion below this line -->
-NO-GO is the honest release decision. R1 was reproduced against the baseline with a malformed stored booking and mitigated by validating every interval in a pure module; the direct Node check passes, but the required Vitest regression run is still missing. R2 was confirmed in the supplied playbook and reduced by prohibiting real timetable data, authentication, databases and production deployment. The residual scores are 4 and 3, so neither remains at 6 or higher. However, the complete Vitest suite and production build were not run because npm could not reach its package registry. The UI images are static responsive renders, not proof that React mounted. Do not release or merge until a clean install, Vitest run and build are recorded.
+CONDITIONAL is the defensible release decision. R1 was reproduced against the baseline with a malformed stored booking, then mitigated by validating intervals in a pure module; the final Vitest suite passes. R2 was confirmed in the supplied playbook and reduced by prohibiting real timetable data, authentication, databases and production deployment. Their residual scores are 4 and 3, both below the unacceptable threshold of 6. The production build also passes on the CI runner. However, the responsive images are static renders rather than proof that React mounted in a browser, and the project has no lint script or dependency lockfile. Keep the PR open and require a live UI check and owner review before merge or release.
