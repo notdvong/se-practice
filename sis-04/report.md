@@ -19,8 +19,8 @@
 | Starting point | starter |
 | Baseline commit | 1d36742 |
 | Language (ts or js) | ts |
-| Vitest version | (to be filled from the "RUN v..." line of the real run) |
-| Where I ran the tests | (to be filled: where the student ran npm install and npx vitest run) |
+| Vitest version | 3.2.7 |
+| Where I ran the tests | GitHub Codespace (default image), branch sis-04 checked out at the baseline commit 1d36742 |
 
 ### 1.1 Baseline run
 
@@ -29,7 +29,58 @@
      "No test files found". That is your honest "original" number, 0/0. -->
 
 ```text
-(paste here)
+@notdvong ➜ /workspaces/se-practice (sis-04) $ git checkout 1d36742
+Note: switching to '1d36742'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 1d36742 sis-04: baseline from starter
+@notdvong ➜ /workspaces/se-practice (1d36742) $ cd sis-04/app
+@notdvong ➜ /workspaces/se-practice/sis-04/app (1d36742) $ npm install
+
+added 104 packages, and audited 105 packages in 34s
+
+19 packages are looking for funding
+  run `npm fund` for details
+
+5 vulnerabilities (2 moderate, 1 high, 2 critical)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   esbuild@0.21.5 (postinstall: node install.js)
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+npm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice
+@notdvong ➜ /workspaces/se-practice/sis-04/app (1d36742) $ npx vitest run
+
+ RUN  v3.2.7 /workspaces/se-practice/sis-04/app
+
+No test files found, exiting with code 1
+
+include: **/*.{test,spec}.?(c|m)[jt]s?(x)
+exclude:  **/node_modules/**, **/dist/**, **/cypress/**, **/.{idea,git,cache,output,temp}/**, **/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*
+
+@notdvong ➜ /workspaces/se-practice/sis-04/app (1d36742) $
 ```
 
 ## 2. Context for the assistant

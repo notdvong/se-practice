@@ -27,11 +27,11 @@ project:                        # exactly as in report.md section 1
   start_from: starter   # week-08 | week-07 | sis-03 | starter
   baseline_commit: 1d36742   # the commit that brought the starting point in unchanged
   language: ts   # ts | js
-  vitest:                       # the version from the "RUN  v..." line, e.g. 3.2.4
+  vitest: 3.2.7   # the version from the "RUN  v..." line, e.g. 3.2.4
 
 counts:                         # the checker prints most of these under --json "measured"
   rooms: 5   # rooms in ROOMS (src/rooms)
-  tests_original:               # tests in the baseline run, report.md 1.1 (0 if there were none)
+  tests_original: 0   # tests in the baseline run, report.md 1.1 (0 if there were none)
   tests_final:                  # tests in your final test files
   risks: 6   # rows in report.md 3.1
   exchanges: 3   # complete exchanges in report.md section 8
