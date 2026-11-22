@@ -2,7 +2,8 @@
 
 <!-- The ONLY file you write prose in. Keep every numbered heading (## 1. … ## 10.), every
      ### sub-heading and every **Label:** word — the checker finds your answers by them.
-     Replace every "(write here)" and "(paste here)". Delete these <!-- --> comments if you like. -->
+     Replace every "For this assignment, I provided the assistant with the structure of the project, the requirements (AC1-AC6, F1-F5), and the primary restrictions. I also provided a description of the project to ensure the assistant had the necessary information before suggesting any changes to the project. Some of the suggestions provided by the AI were incorrect for the project. For example, the suggestion regarding the risks associated with R3 and R6, the idea to use the room.blocked || checkbox, the suggestion regarding the reason-code for the canBook function, and the suggestions regarding the tests for B1 to B6 were all incorrect. However, the suggestions regarding the order in which to complete the tasks and the filterRooms function were helpful. The tests for B1 and B2 ensured that the 120-minute booking limit was enforced. The tests for B3 and B4 confirmed that bookings could touch but not overlap. If I had more time to complete this project, I would implement additional tests to automatically check for F4 and F5. Additionally, I would implement a specific error message to be displayed to the user for each booking rule that fails. The AI was able to save me time in completing this project.
+ and "(paste here)". Delete these <!-- --> comments if you like. -->
 
 ## 1. Setup and starting point
 
