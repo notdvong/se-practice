@@ -479,7 +479,7 @@ export function filterRooms(
 
 | Check | Why it still fails |
 | --- | --- |
-| (write here) | (write here) |
+| L10 | Section 10 has 198 words and the brief asks for 200-300. It is the student's own reflection with the sentences that were not true removed (they described checks the AI had made); the student chose not to add more, so it stays 2 words short. |
 
 ## 10. AI reflection (Task 6)
 
