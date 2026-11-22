@@ -1,0 +1,52 @@
+schema: 1
+week: "10"
+
+student:
+  name: "Bolat Askar"
+  student_id: "25B031178"
+  github: "notdvong"
+
+assistant:
+  tool: "ChatGPT"
+  model: "GPT-6"
+  environment: "chat"
+
+project:
+  starting_point: "week-07"
+  baseline_commit: "a45b4b7"
+  language: "ts"
+  vitest: "2.1.8"
+
+counts:
+  claims_challenged: 6
+  risks_registered: 6
+  risks_confirmed: 5
+  tests_final: 15
+  agents_lines_changed: 9
+
+audit:
+  level: 0
+
+decision:
+  top_two: [R1, R2]
+  mitigated: [R1, R2]
+  release: "conditional"
+
+checker:
+  pass: 31
+  fail: 0
+  error: 0
+  commit: "c627e29"
+  known_fails: []
+
+review_findings:
+  - "R1: src/booking.ts allowed malformed stored booking end values to bypass overlap comparisons before the refactor."
+  - "R2: provided/AGENTS.md instructed the agent to use real KBTU timetable data and deploy to production, contrary to C1 and C5."
+  - "R4: package.json has no lint script or ESLint configuration, so the agent has no static lint gate."
+  - "AC4: src/availability.ts now uses half-open intervals so endpoint-touching bookings remain available."
+
+honesty:
+  review_was_read_only: "no"
+  agents_patch_approved_by_me: "no"
+  outputs_unedited: "yes"
+  ai_usage_disclosed: "yes"
