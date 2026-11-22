@@ -69,4 +69,7 @@ describe('canBook — Smart Campus acceptance contract', () => {
     expect(canBook({ ...base, start: 1380, end: 1440, now: 1320 })).toBe(true);
   });
 
+  test('R1 AC4: rejects malformed existing booking boundaries instead of treating them as free', () => {
+    expect(canBook({ ...base, bookings: [{ start: 600, end: Number.NaN }] })).toBe(false);
+  });
 });
